@@ -269,20 +269,16 @@ if __name__ == '__main__':
                 logger.error('No pull request found!')
                 sys.exit(1)
 
-            username, repo = pr_data['pull-request']['source']['repository']['full_name'].split(
-                '/')
-            branch = pr_data['pull-request']['source']['branch']['name']
-            fork_url = pr_data['pull-request']['source']['repository']['links']['html']['href']
-            revision = pr_data['commit']['hash']
-            pr_id = pr_data['pull-request']['id']
-
-            sys.stdout.write('{username} {repo} {fork} {revision} {branch} {pr_id}\n'.format(
+            username, repo = pr_data['pull-request']['source']['repository']['full_name'].split('/')
+            output = '{username}\n{repo}\n{fork}\n{revision}\n{branch}\n{pr_id}\n{title}\n'
+            sys.stdout.write(output.format(
                 username=username,
                 repo=repo,
-                fork=fork_url,
-                revision=revision,
-                branch=branch,
-                pr_id=pr_id,
+                fork=pr_data['pull-request']['source']['repository']['links']['html']['href'],
+                revision=pr_data['commit']['hash'],
+                branch=pr_data['pull-request']['source']['branch']['name'],
+                pr_id=pr_data['pull-request']['id'],
+                title=pr_data['pull-request']['title'],
             ))
 
         elif args['approve']:
@@ -311,20 +307,21 @@ if __name__ == '__main__':
             pr = bb_client.get_pull_request(args['<pr_id>'])
             commits = bb_client.get_commits_of_pull_request(pr['id'])
 
-            username, repo = pr['source']['repository']['full_name'].split(
-                '/')
+            username, repo = pr['source']['repository']['full_name'].split('/')
             branch = pr['source']['branch']['name']
             fork_url = pr['source']['repository']['links']['html']['href']
             revision = commits[0]['hash']
             pr_id = pr['id']
 
-            sys.stdout.write('{username} {repo} {fork} {revision} {branch} {pr_id}\n'.format(
+            output = '{username}\n{repo}\n{fork}\n{revision}\n{branch}\n{pr_id}\n{title}\n'
+            sys.stdout.write(output.format(
                 username=username,
                 repo=repo,
                 fork=fork_url,
                 revision=revision,
                 branch=branch,
                 pr_id=pr_id,
+                title=pr['title'],
             ))
 
     elif args['commit']:

@@ -49,7 +49,7 @@ SCRIPT="/srv/bb_cli_client/bb.py"
 python3 $SCRIPT pr unapprove updated
 
 # Get next PR data
-result=($(python3 $SCRIPT pr next))
+IFS=$'\n' result=($(python3 $SCRIPT pr next))
 
 username="${result[0]}"
 repo="${result[1]}"
